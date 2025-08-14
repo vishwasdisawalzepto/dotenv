@@ -80,16 +80,23 @@ func loadFile(file string, overload bool) error {
 	return nil
 }
 
-func (d *dotenv) Overload() error {
-	parsedFiles := d.opts.ParseFilePaths()
+func (d *dotenv) overloadFromFiles(parsedFiles []string) error {
 	for _, parsedFile := range parsedFiles {
 		if err := loadFile(parsedFile, true); err != nil && d.opts.debug {
-			log.Println(fmt.Sprintf("[dotenv] Overloading parsedFile %s failed with error %s", parsedFile, err.Error()))
+			log.Printf("[dotenv] Overloading parsedFile %s failed with error %s", parsedFile, err.Error())
 			continue
 		}
 		d.files = append(d.files, parsedFile)
 	}
 	return nil
+}
+
+func (d *dotenv) Overload() error {
+	return d.overloadFromFiles(d.opts.ParseFilePaths())
+}
+
+func (d *dotenv) OverloadWatchFiles() error {
+	return d.overloadFromFiles(d.opts.ParseWatchFilePaths())
 }
 
 func new() *dotenv {

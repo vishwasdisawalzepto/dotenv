@@ -16,6 +16,10 @@ func Overload() error {
 	return d.Overload()
 }
 
+func OverloadWatchFiles() error {
+	return d.OverloadWatchFiles()
+}
+
 func OptLookupGit() {
 	d.opts.lookupGit = true
 }
@@ -40,13 +44,13 @@ func OptLookupFile(file string) {
 	d.opts.lookupFile = append(d.opts.lookupFile, file)
 }
 
-func OptDynamicLookupWatchFile(file string) {
-	d.opts.dynamicLookupWatchFile = append(d.opts.dynamicLookupWatchFile, file)
+func OptLookupWatchFile(file string) {
+	d.opts.lookupWatchFile = append(d.opts.lookupWatchFile, file)
 }
 
 func WatchConfig() {
 	d.opts.watchConfig = true
-	files := d.opts.ParseDynamicFilePaths()
+	files := d.opts.ParseWatchFilePaths()
 	for _, file := range files {
 		go d.WatchConfig(file)
 	}
